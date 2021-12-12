@@ -1,0 +1,89 @@
+﻿@model JustBlog.Ui.Models.CreatePostModel
+@using JustBlog.Core.Entities;
+
+@{
+    ViewBag.Title = "Edit";
+    var categories = TempData["categories"] as IEnumerable<Category>;
+    var authorName = TempData["AuthorName"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>CreatePostModel</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="PostCategories">Categories</label>
+        @for (int i = 0; i < categories.ToList().Count; i++)
+        {
+
+            <a>@categories.ToList()[i].Name</a>
+            <input type="checkbox" name="IDs" value="@categories.ToList()[i].Id" 
+                   @foreach (var item in Model.PostCategories) {  
+                       if (@categories.ToList()[i].Id == item.CategoryID) 
+                       { @: checked
+                        break;
+                       }
+                   }>
+        }
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(x => x.Content, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(x => x.Content, new { @class = "form-control", id = "FullContent" })
+            @Html.ValidationMessageFor(x => x.Content, null, new { @class = "text-danger" })
+            <script>
+                CKEDITOR.replace("FullContent");
+            </script>
+        </div>
+     </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Slug, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Slug, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Slug, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="AuthorName" class="control-label col-md-2">Author</label>
+            <div class="col-md-10"><a href="#">@authorName</a></div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Controller", new { @id = "" }, new { @class = "btn btn-primary" })
+</div>
